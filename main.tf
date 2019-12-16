@@ -79,7 +79,7 @@ resource "aws_network_interface" "mgmt-enis" {
     subnet_id                   = tolist(data.aws_subnet_ids.awsVpcMgmtSubnets[count.index].ids)[0]
     security_groups             = data.aws_security_groups.awsVpcMgmtSecurityGroup.ids
     tags = {
-        Name                    = "${var.awsNamePrefix}-bigip-${count.index+1}-eth0"
+        Name                    = "${var.awsNamePrefix}-bigip-az${count.index+1}-eth0"
     }
 }
 
@@ -88,7 +88,7 @@ resource "aws_network_interface" "external-enis" {
     subnet_id                   = tolist(data.aws_subnet_ids.awsVpcExternalSubnets[count.index].ids)[0]
     security_groups             = data.aws_security_groups.awsVpcExternalSecurityGroup.ids
     tags = {
-        Name                    = "${var.awsNamePrefix}-bigip-${count.index+1}-eth1"
+        Name                    = "${var.awsNamePrefix}-bigip-az${count.index+1}-eth1"
     }
 }
 
@@ -97,7 +97,7 @@ resource "aws_network_interface" "internal-enis" {
     subnet_id                   = tolist(data.aws_subnet_ids.awsVpcInternalSubnets[count.index].ids)[0]
     security_groups             = data.aws_security_groups.awsVpcInternalSecurityGroup.ids
     tags = {
-        Name                    = "${var.awsNamePrefix}-bigip-${count.index+1}-eth2"
+        Name                    = "${var.awsNamePrefix}-bigip-az${count.index+1}-eth2"
     }
 }
 
@@ -137,6 +137,6 @@ resource "aws_instance" "f5_bigip" {
         device_index            = 2
     }
     tags = {
-        Name                    = "${var.awsNamePrefix}-bigip-${count.index}"
+        Name                    = "${var.awsNamePrefix}-bigip-az${count.index+1}"
     }
 }
