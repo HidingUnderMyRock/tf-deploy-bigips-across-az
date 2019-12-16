@@ -1,6 +1,7 @@
 variable "awsAccessKey"         { default = "xxxxx" }
 variable "awsSecretKey"         { default = "xxxxx" }
 variable "awsVpcName"           { default = "lipowsky-tf-vpc" }
+variable "awsVpcAzCount"        { default = 2 }
 variable "awsNamePrefix"        { default = "lipowsky-tf"}
 variable "awsSshKeyName"        { default = "lipowsky-aws" }
 variable "awsRegion"            { default = "us-east-2" }

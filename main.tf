@@ -18,7 +18,7 @@ data "aws_vpc" "lipowsky-tf-vpc" {
 
 data "aws_subnet_ids" "awsVpcMgmtSubnets" {
     vpc_id                      = data.aws_vpc.lipowsky-tf-vpc.id
-    count                       = 2
+    count                       = var.awsVpcAzCount
     tags = {
         Name                    = "*mgmt*az${count.index+1}"
     }
@@ -26,7 +26,7 @@ data "aws_subnet_ids" "awsVpcMgmtSubnets" {
 
 data "aws_subnet_ids" "awsVpcExternalSubnets" {
     vpc_id                      = data.aws_vpc.lipowsky-tf-vpc.id
-    count                       = 2
+    count                       = var.awsVpcAzCount
     tags = {
         Name                    = "*external*az${count.index+1}"
     }
@@ -34,7 +34,7 @@ data "aws_subnet_ids" "awsVpcExternalSubnets" {
 
 data "aws_subnet_ids" "awsVpcInternalSubnets" {
     vpc_id                      = data.aws_vpc.lipowsky-tf-vpc.id
-    count                       = 2
+    count                       = var.awsVpcAzCount
     tags = {
         Name                    = "*internal*az${count.index+1}"
     }
