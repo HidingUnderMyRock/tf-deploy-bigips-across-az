@@ -1,5 +1,6 @@
 variable "awsAccessKey"         { default = "xxxxx" }
 variable "awsSecretKey"         { default = "xxxxx" }
+variable "awsTempAdminPassword" { default = "Ch4ngeMeImmediately!"}
 variable "awsVpcName"           { default = "lipowsky-tf-vpc" }
 variable "awsVpcAzCount"        { default = 2 }
 variable "awsNamePrefix"        { default = "lipowsky-tf"}
