@@ -1,0 +1,10 @@
+# awsAccessKey            = "xxxxx"
+# awsSecretKey            = "xxxxx"
+awsTempAdminPassword    = "Ch4ngeMeImmediately!"
+awsVpcName              = "lipowsky-tf-vpc"
+awsVpcAzCount           = 2
+awsNamePrefix           = "lipowsky-tf"
+awsSshKeyName           = "lipowsky-aws"
+awsRegion               = "us-east-2"
+awsAmiId                = "ami-0917a22a0995b3f87"
+awsInstanceType         = "m5.2xlarge"

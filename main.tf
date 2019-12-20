@@ -1,3 +1,12 @@
+variable "awsTempAdminPassword" {}
+variable "awsVpcName" {}
+variable "awsVpcAzCount" {}
+variable "awsNamePrefix" {}
+variable "awsSshKeyName" {}
+variable "awsRegion" {}
+variable "awsAmiId" {}
+variable "awsInstanceType" {}
+
 terraform {
     required_version = ">= 0.12"
 }
