@@ -1,4 +1,3 @@
-variable "awsTempAdminPassword" {}
 variable "awsVpcName" {}
 variable "awsVpcAzCount" {}
 variable "awsNamePrefix" {}
@@ -148,11 +147,5 @@ resource "aws_instance" "f5_bigip" {
     tags = {
         Name                    = "${var.awsNamePrefix}-bigip-az${count.index+1}"
     }
-    user_data = <<-EOF
-        #! /bin/bash
-        /bin/tmsh modify sys management-dhcp sys-mgmt-dhcp-config request-options delete { host-name domain-name }
-        /bin/tmsh modify auth user admin password ${var.awsTempAdminPassword}
-        /bin/tmsh save sys config
-        echo "cloud-init finished" >> /config/cloud-init.output
-    EOF
+    user_data                   = "${file("userdata.yaml")}"
 }

@@ -1,6 +1,5 @@
 # awsAccessKey            = "xxxxx"
 # awsSecretKey            = "xxxxx"
-awsTempAdminPassword    = "Ch4ngeMeImmediately!"
 awsVpcName              = "lipowsky-tf-vpc"
 awsVpcAzCount           = 2
 awsNamePrefix           = "lipowsky-tf"
