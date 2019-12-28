@@ -6,15 +6,28 @@ This Terraform module is used to deploy multiple F5 BIG-IPs in an AWS VPC, placi
 
 ## Variables
 
+### terraform.tfvars
+
 | Variable | Description |
 | -------- | ----------- |
-| awsVpcName | The VPC name in AWS that the BIG-IPs will reside within|
-| awsVpcAzCount | The number of AZs to deploy BIG-IPs into|
-| awsNamePrefix | The prefix to all created objects name/tags within AWS|
-| awsSshKeyName | The SSH key within the AWS region that the BIG-IPs will use to authenticate|
-| awsRegion | The AWS region the VPC resides within|
-| awsAmiId | The AMI ID for the BIG-IP image that will be used|
-| awsInstanceType | The instance size/flavor of the BIG-IP instances|
+| awsVpcName | The VPC name in AWS that the BIG-IPs will reside within |
+| awsVpcAzCount | The number of AZs to deploy BIG-IPs into |
+| awsNamePrefix | The prefix to all created objects name/tags within AWS |
+| awsSshKeyName | The SSH key within the AWS region that the BIG-IPs will use to authenticate |
+| awsRegion | The AWS region the VPC resides within |
+| awsAmiId | The AMI ID for the BIG-IP image that will be used |
+| awsInstanceType | The instance size/flavor of the BIG-IP instances |
+
+### cloud-init.yaml
+
+| Variable | Description |
+| -------- | ----------- |
+| TEMPADMINPWD | The **temporary** admin password |
+| FN | Declarative onboarding RPM filename |
+| RPMURL | Download link for declarative onboarding RPM |
+| FILEPATH | Path to downloaded file on BIG-IP |
+| CREDS | Credentials used to install declarative onboarding |
+| IP | IP address of BIG-IP instance |
 
 ## Documentation
 
