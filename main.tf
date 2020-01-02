@@ -148,4 +148,13 @@ resource "aws_instance" "f5_bigip" {
         Name                    = "${var.awsNamePrefix}-bigip-az${count.index+1}"
     }
     user_data                   = file("cloud-init.yaml")
+    provisioner "local-exec" {
+        command = "echo Public: ${self.public_ip} > ${var.awsNamePrefix}-bigip-az${count.index+1}.info"
+    }
+    provisioner "local-exec" {
+        command = "echo Private: ${self.private_ip} >> ${var.awsNamePrefix}-bigip-az${count.index+1}.info"
+    }
+    provisioner "local-exec" {
+        command = "echo DNS: ${self.public_dns} >> ${var.awsNamePrefix}-bigip-az${count.index+1}.info"
+    }
 }
