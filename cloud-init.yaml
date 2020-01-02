@@ -38,4 +38,5 @@ write_files:
 
 runcmd:
   # NOTE: Commands must be non-blocking so send long running commands (polling/waiting for mcpd) to the background
+  # NOTE: runcmd only runs at first boot
   - /config/custom-config.sh &
