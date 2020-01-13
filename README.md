@@ -17,6 +17,7 @@ This Terraform module is used to deploy multiple F5 BIG-IPs in an AWS VPC, placi
 | awsRegion | The AWS region the VPC resides within |
 | awsAmiId | The AMI ID for the BIG-IP image that will be used |
 | awsInstanceType | The instance size/flavor of the BIG-IP instances |
+| awsSecondaryIpCount | The number of secondary IP addresses to attach to external interface |
 
 ### cloud-init.yaml
 
