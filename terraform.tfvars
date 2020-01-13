@@ -1,4 +1,4 @@
-awsVpcName              = "lipowsky-tf-vpc"
+awsVpcName              = "lipowsky-vpc"
 awsVpcAzCount           = 2
 awsNamePrefix           = "lipowsky-tf"
 awsSshKeyName           = "lipowsky-aws"
