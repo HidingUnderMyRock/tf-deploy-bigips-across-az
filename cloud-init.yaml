@@ -24,13 +24,13 @@ write_files:
       /bin/tmsh save /sys config
 
       # Download declarative onboarding RPM from GitHub
-      /bin/curl --silent --retry 20 --location --create-dirs --output $FILEPATH/$FN $RPMURL
+      /bin/curl --silent --retry 10 --location --create-dirs --output $FILEPATH/$FN $RPMURL
 
       # Install declarative onboarding RPM
       LEN=$(/bin/wc -c $FILEPATH/$FN | /bin/cut -f 1 -d ' ')
-      /bin/curl -kvu $CREDS https://$IP/mgmt/shared/file-transfer/uploads/$FN -H 'Content-Type: application/octet-stream' -H "Content-Range: 0-$((LEN - 1))/$LEN" -H "Content-Length: $LEN" -H 'Connection: keep-alive' --data-binary @$FILEPATH/$FN
+      /bin/curl --retry 10 -kvu $CREDS https://$IP/mgmt/shared/file-transfer/uploads/$FN -H 'Content-Type: application/octet-stream' -H "Content-Range: 0-$((LEN - 1))/$LEN" -H "Content-Length: $LEN" -H 'Connection: keep-alive' --data-binary @$FILEPATH/$FN
       DATA="{\"operation\":\"INSTALL\",\"packageFilePath\":\"/var/config/rest/downloads/$FN\"}"
-      /bin/curl -kvu $CREDS "https://$IP/mgmt/shared/iapp/package-management-tasks" -H "Origin: https://$IP" -H 'Content-Type: application/json;charset=UTF-8' --data $DATA
+      /bin/curl --retry 10 -kvu $CREDS "https://$IP/mgmt/shared/iapp/package-management-tasks" -H "Origin: https://$IP" -H 'Content-Type: application/json;charset=UTF-8' --data $DATA
 
       # cloud-init completed
       TIMESTAMP=$(date)
