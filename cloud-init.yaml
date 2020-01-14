@@ -10,7 +10,7 @@ write_files:
       TEMPADMINPWD=Ch4ngeMeImmediately!
       FN=f5-declarative-onboarding-1.9.0-1.noarch.rpm
       RPMURL=https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.9.0/f5-declarative-onboarding-1.9.0-1.noarch.rpm
-      FILEPATH=/var/config/rest/downloads/
+      FILEPATH=/var/config/rest/downloads
       CREDS=admin:$TEMPADMINPWD
       IP=127.0.0.1
 
@@ -19,22 +19,29 @@ write_files:
       wait_bigip_ready 
 
       # Set temp admin password and disable hostname discovery via dhcp
+      /bin/printf "\nsetting temporary admin password\n"
       /bin/tmsh modify auth user admin password $TEMPADMINPWD
+      /bin/printf "\ndisabling DHCP hostname resolution\n"
       /bin/tmsh modify sys management-dhcp sys-mgmt-dhcp-config request-options delete { host-name domain-name }
+      /bin/printf "\nsaving TMOS config\n"
       /bin/tmsh save /sys config
 
       # Download declarative onboarding RPM from GitHub
+      /bin/printf "\ndownloading declarative onboarding RPM from GitHub\n"
       /bin/curl --silent --retry 10 --location --create-dirs --output $FILEPATH/$FN $RPMURL
 
       # Install declarative onboarding RPM
       LEN=$(/bin/wc -c $FILEPATH/$FN | /bin/cut -f 1 -d ' ')
+      /bin/printf "\ntransfering RPM to iApp uploads\n"
       /bin/curl --retry 10 -kvu $CREDS https://$IP/mgmt/shared/file-transfer/uploads/$FN -H 'Content-Type: application/octet-stream' -H "Content-Range: 0-$((LEN - 1))/$LEN" -H "Content-Length: $LEN" -H 'Connection: keep-alive' --data-binary @$FILEPATH/$FN
-      DATA="{\"operation\":\"INSTALL\",\"packageFilePath\":\"/var/config/rest/downloads/$FN\"}"
+      DATA="{\"operation\":\"INSTALL\",\"packageFilePath\":\"$FILEPATH/$FN\"}"
+      /bin/printf "\npausing ten seconds before installing RPM\n"
+      /bin/sleep 10
+      /bin/printf "\ninstalling DO RPM\n"
       /bin/curl --retry 10 -kvu $CREDS "https://$IP/mgmt/shared/iapp/package-management-tasks" -H "Origin: https://$IP" -H 'Content-Type: application/json;charset=UTF-8' --data $DATA
 
       # cloud-init completed
-      TIMESTAMP=$(date)
-      /bin/echo "cloud-init completed at $TIMESTAMP" > /config/cloud-init.finshed
+      /bin/printf "\ncloud-init completed at $(date)\n"
 
 runcmd:
   # NOTE: Commands must be non-blocking so send long running commands (polling/waiting for mcpd) to the background
