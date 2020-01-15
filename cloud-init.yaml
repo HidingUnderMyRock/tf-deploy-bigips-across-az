@@ -8,8 +8,10 @@ write_files:
 
       # Setup environmental variables
       TEMPADMINPWD=Ch4ngeMeImmediately!
-      FN=f5-declarative-onboarding-1.9.0-1.noarch.rpm
-      RPMURL=https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.9.0/f5-declarative-onboarding-1.9.0-1.noarch.rpm
+      DOFN=f5-declarative-onboarding-1.9.0-1.noarch.rpm
+      CFOFN=f5-cloud-failover-0.9.1-1.noarch.rpm
+      DORPMURL=https://github.com/F5Networks/f5-declarative-onboarding/releases/download/v1.9.0/f5-declarative-onboarding-1.9.0-1.noarch.rpm
+      CFORPMURL=https://github.com/f5devcentral/f5-cloud-failover-extension/releases/download/v0.9.1/f5-cloud-failover-0.9.1-1.noarch.rpm
       FILEPATH=/var/config/rest/downloads
       CREDS=admin:$TEMPADMINPWD
       IP=127.0.0.1
@@ -28,20 +30,40 @@ write_files:
 
       # Download declarative onboarding RPM from GitHub
       /bin/printf "\ndownloading declarative onboarding RPM from GitHub\n"
-      /bin/curl --silent --retry 10 --location --create-dirs --output $FILEPATH/$FN $RPMURL
+      /bin/curl --silent --retry 10 --location --create-dirs --output $FILEPATH/$DOFN $DORPMURL
+      /bin/printf "\ndownloading declarative onboarding RPM from GitHub...complete\n"
+
+      # Download cloud failover RPM from GitHub
+      /bin/printf "\ndownloading cloud failover RPM from GitHub\n"
+      /bin/curl --silent --retry 10 --location --create-dirs --output $FILEPATH/$CFOFN $CFORPMURL
+      /bin/printf "\ndownloading cloud failover RPM from GitHub...complete\n"
 
       # Install declarative onboarding RPM
-      LEN=$(/bin/wc -c $FILEPATH/$FN | /bin/cut -f 1 -d ' ')
-      /bin/printf "\ntransfering RPM to iApp uploads\n"
-      /bin/curl --retry 10 -kvu $CREDS https://$IP/mgmt/shared/file-transfer/uploads/$FN -H 'Content-Type: application/octet-stream' -H "Content-Range: 0-$((LEN - 1))/$LEN" -H "Content-Length: $LEN" -H 'Connection: keep-alive' --data-binary @$FILEPATH/$FN
-      DATA="{\"operation\":\"INSTALL\",\"packageFilePath\":\"$FILEPATH/$FN\"}"
-      /bin/printf "\npausing ten seconds before installing RPM\n"
-      /bin/sleep 10
-      /bin/printf "\ninstalling DO RPM\n"
+      LEN=$(/bin/wc -c $FILEPATH/$DOFN | /bin/cut -f 1 -d ' ')
+      /bin/printf "\ntransfering declarative onboarding RPM to iApp uploads\n"
+      /bin/curl --retry 10 -kvu $CREDS https://$IP/mgmt/shared/file-transfer/uploads/$DOFN -H 'Content-Type: application/octet-stream' -H "Content-Range: 0-$((LEN - 1))/$LEN" -H "Content-Length: $LEN" -H 'Connection: keep-alive' --data-binary @$FILEPATH/$DOFN
+      /bin/printf "\ntransfering declarative onboarding RPM to iApp uploads...complete\n"
+      /bin/printf "\npausing five seconds before installing DO RPM\n"
+      /bin/sleep 5
+      /bin/printf "\ninstalling declarative onboarding RPM\n"
+      DATA="{\"operation\":\"INSTALL\",\"packageFilePath\":\"$FILEPATH/$DOFN\"}"
       /bin/curl --retry 10 -kvu $CREDS "https://$IP/mgmt/shared/iapp/package-management-tasks" -H "Origin: https://$IP" -H 'Content-Type: application/json;charset=UTF-8' --data $DATA
+      /bin/printf "\ninstalling declarative onboarding RPM...complete\n"
+
+      #Install Cloud Failover RPM
+      LEN=$(/bin/wc -c $FILEPATH/$CFOFN | /bin/cut -f 1 -d ' ')
+      /bin/printf "\ntransfering cloud failover RPM to iApp uploads\n"
+      /bin/curl --retry 10 -kvu $CREDS https://$IP/mgmt/shared/file-transfer/uploads/$CFOFN -H 'Content-Type: application/octet-stream' -H "Content-Range: 0-$((LEN - 1))/$LEN" -H "Content-Length: $LEN" -H 'Connection: keep-alive' --data-binary @$FILEPATH/$CFOFN
+      /bin/printf "\ntransfering cloud failover RPM to iApp uploads...complete\n"
+      /bin/printf "\npausing five seconds before installing CFO RPM\n"
+      /bin/sleep 5
+      /bin/printf "\ninstalling cloud failover RPM\n"
+      DATA="{\"operation\":\"INSTALL\",\"packageFilePath\":\"$FILEPATH/$CFOFN\"}"
+      /bin/curl --retry 10 -kvu $CREDS "https://$IP/mgmt/shared/iapp/package-management-tasks" -H "Origin: https://$IP" -H 'Content-Type: application/json;charset=UTF-8' --data $DATA
+      /bin/printf "\ninstalling cloud failover RPM...complete\n"
 
       # cloud-init completed
-      /bin/printf "\ncloud-init completed at $(date)\n"
+      /bin/printf "\n*** cloud-init completed at $(date) ***\n"
 
 runcmd:
   # NOTE: Commands must be non-blocking so send long running commands (polling/waiting for mcpd) to the background
