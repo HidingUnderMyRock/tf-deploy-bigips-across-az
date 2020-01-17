@@ -5,4 +5,5 @@ awsSshKeyName           = "lipowsky-aws"
 awsRegion               = "us-east-2"
 awsAmiId                = "ami-0917a22a0995b3f87"
 awsInstanceType         = "m5.2xlarge"
-awsSecondaryIpCount     = 1
+awsSecondaryIpCount     = 0
+awsVipCidrBlock         = "192.168.11.0/24"
