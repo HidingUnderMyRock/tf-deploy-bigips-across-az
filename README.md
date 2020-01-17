@@ -18,6 +18,7 @@ This Terraform module is used to deploy multiple F5 BIG-IPs in an AWS VPC, placi
 | awsAmiId | The AMI ID for the BIG-IP image that will be used |
 | awsInstanceType | The instance size/flavor of the BIG-IP instances |
 | awsSecondaryIpCount | The number of secondary IP addresses to attach to external interface |
+| awsVipCidrBlock | CIDR block for virtual addresses, which will be mapped to the external ENI of BIG-IP-1 |
 
 ### cloud-init.yaml
 
@@ -33,6 +34,8 @@ This Terraform module is used to deploy multiple F5 BIG-IPs in an AWS VPC, placi
 ## Documentation
 
 The Terraform module has been tested with the tf-create-vpc module, and expects to find specific naming schemes in place to identify subnets and other resources.  For example, with awsVpcAzCount set to 2, the module will query the subnets within the VPC for tags that end in az1 & az2, and for subnets that contain mgmt, external, and internal.  It will assign these subnets to the ENIs for the BIG-IP instances.
+
+The VPC route table will be updated to add a route to the CIDR contained in awsVipCidrBlock, and initially points the route to the external ENI associated with BIG-IP-1.  The expectation is that this route will be maintained by the [F5 Cloud Failover](https://clouddocs.f5networks.net/products/extensions/f5-cloud-failover/latest/) extension, redirecting the route to the active BIG-IP.
 
 All names/tags for objects will contain the value of the awsNamePrefix variable.  For example, with awsNamePrefix set to lipowsky-tf, the BIG-IPs will be tagged as lipowsky-tf-bigip-az1 and lipowsky-tf-bigip-az2.
 
