@@ -1,4 +1,4 @@
-# tf-deploy-bigips
+# tf-deploy-bigips-two-az
 
 ## Description
 
@@ -36,6 +36,4 @@ The Terraform module has been tested with the tf-create-vpc module, and expects 
 
 All names/tags for objects will contain the value of the awsNamePrefix variable.  For example, with awsNamePrefix set to lipowsky-tf, the BIG-IPs will be tagged as lipowsky-tf-bigip-az1 and lipowsky-tf-bigip-az2.
 
-No further licensing or configuration of the BIG-IP instances is performed.  It is expected that Declarative Onboarding will be used to configure and license the BIG-IP instances, in preparation for service deployment.
-
-[Declarative Onboarding](https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/)
+No further licensing or configuration of the BIG-IP instances is performed.  It is expected that [F5 Declarative Onboarding](https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/) will be used to configure and license the BIG-IP instances, in preparation for service deployment.
