@@ -6,6 +6,7 @@ variable "awsRegion" {}
 variable "awsAmiId" {}
 variable "awsInstanceType" {}
 variable "awsSecondaryIpCount" {}
+variable awsVipCidrBlock {}
 
 terraform {
     required_version = ">= 0.12"
@@ -81,6 +82,12 @@ data "aws_security_groups" "awsVpcInternalSecurityGroup" {
     }
 }
 
+# Retrieve route table ID from VPC for external VLAN
+
+data "aws_route_table" "awsRouteTable" {
+    vpc_id                      = "${data.aws_vpc.lipowsky-tf-vpc.id}"
+}
+
 # Create ENIs in each of the above subnets & assign security group
 
 resource "aws_network_interface" "mgmt-enis" {
@@ -135,6 +142,14 @@ resource "aws_eip" "external-eips" {
     count                       = length(data.aws_subnet_ids.awsVpcExternalSubnets[*].ids)
     network_interface           = aws_network_interface.external-enis[count.index].id
     vpc                         = true
+}
+
+# Create route for virtual addresses in VPC route table
+
+resource "aws_route" "awsVipRoute" {
+    route_table_id              = data.aws_route_table.awsRouteTable.id
+    destination_cidr_block      = var.awsVipCidrBlock
+    network_interface_id        = aws_network_interface.external-enis[0].id
 }
 
 # Create F5 BIG-IP instances in each AZ
